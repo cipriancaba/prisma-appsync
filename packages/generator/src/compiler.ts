@@ -463,9 +463,18 @@ export class PrismaAppSyncCompiler {
                 outputDirectives.push('@aws_oidc')
             } else if (directive?.allow === 'userPools') {
                 if (directive?.groups && Array.isArray(directive.groups)) {
-                    outputDirectives.push(
-                        `@aws_auth(cognito_groups: [${directive.groups.map((g: string) => `"${g}"`).join(', ')}])`,
-                    )
+                    if (directivesObjects.find(f => f.allow === "apiKey")) {
+                        // If apiKey is used in conjunction with cognito, it won't work as aws_auth and need to use @aws_cognito_user_pools
+                        // https://stackoverflow.com/a/61099558
+                        outputDirectives.push(
+                            `@aws_cognito_user_pools(cognito_groups: [${directive.groups.map((g: string) => `"${g}"`).join(', ')}])`,
+                        )
+                    } else {
+                        outputDirectives.push(
+                            `@aws_auth(cognito_groups: [${directive.groups.map((g: string) => `"${g}"`).join(', ')}])`,
+                        )
+                    }
+                    
                 } else {
                     outputDirectives.push('@aws_cognito_user_pools')
                 }

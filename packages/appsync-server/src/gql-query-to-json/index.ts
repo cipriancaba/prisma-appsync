@@ -93,7 +93,7 @@ const getArgumentObject = (argumentFields: Argument[]) => {
                     const value: any = {}
 
                     Object.keys(args).forEach((key) => {
-                        value[key] = args[key].value
+                        value[key] = args[key]
                     })
 
                     return value
@@ -132,7 +132,7 @@ const getArguments = (args: any) => {
                     const value: any = {}
 
                     Object.keys(args).forEach((key) => {
-                        value[key] = args[key].value
+                        value[key] = args[key]
                     })
 
                     return value
@@ -227,9 +227,10 @@ export const graphQlQueryToJson = (
 
     const parsedQuery = parse(query)
 
-    const operationDefinition = parsedQuery.definitions.find((q: any) => {
-        return options.operationName === q?.name?.value
-    }) || parsedQuery.definitions?.[0]
+    const operationDefinition =
+        parsedQuery.definitions.find((q: any) => {
+            return options.operationName === q?.name?.value
+        }) || parsedQuery.definitions?.[0]
 
     // @ts-ignore
     const definition = operationDefinition as ActualDefinitionNode

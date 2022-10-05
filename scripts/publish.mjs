@@ -20,7 +20,7 @@ const { tag } = await prompts({
 
 if (!tag) process.exit()
 
-const latestPublished = String(await $`npm show prisma-appsync@${tag} version`).trim()
+const latestPublished = String(await $`npm show prisma-appsync-fork@${tag} version`).trim()
 
 const minorPos = latestPublished.lastIndexOf('.')
 const possibleFutureVersion = `${latestPublished.slice(0, minorPos)}.${
@@ -34,21 +34,23 @@ const { publishVersion } = await prompts({
     initial: possibleFutureVersion,
 })
 
+console.log(`Publishing version ${publishVersion}`)
+
 if (!publishVersion || publishVersion === latestPublished) process.exit()
 
 const { versionOk } = await prompts({
     type: 'confirm',
     name: 'versionOk',
-    message: `Run "npm publish prisma-appsync --tag ${tag}" with pkg version "${publishVersion}"?`,
+    message: `Run "npm publish prisma-appsync-fork --tag ${tag}" with pkg version "${publishVersion}"?`,
     initial: false,
 })
 
 if (versionOk) {
     await new Listr([
-        {
-            title: 'Running tests',
-            task: async () => await $`zx scripts/test.mjs`,
-        },
+        // {
+        //     title: 'Running tests',
+        //     task: async () => await $`zx scripts/test.mjs`,
+        // },
         {
             title: 'Cleansing package.json',
             task: async () => await $`node scripts/_pkg.cleanse`,
@@ -63,7 +65,7 @@ if (versionOk) {
         },
         {
             title: 'Publishing on NPM',
-            task: async () => await $`npm publish prisma-appsync --tag ${tag}`,
+            task: async () => await $`npm publish`,
         },
         {
             title: 'Restoring package.json',
