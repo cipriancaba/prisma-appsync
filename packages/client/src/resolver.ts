@@ -23,9 +23,12 @@ import { merge } from './utils'
 export function prismaQueryJoin<T>(queries: PrismaArgs[], operators: PrismaOperator[]): T {
     const prismaArgs: PrismaArgs = {}
 
+    console.log({ operators, queries: JSON.stringify(queries) })
+
     operators.forEach((operator: PrismaOperator) => {
         queries.forEach((query: PrismaArgs) => {
             if (query?.[operator]) {
+                console.log('operator', operator)
                 if (operator === 'where') {
                     if (prismaArgs[operator]?.AND) {
                         prismaArgs[operator].AND.push(query[operator])
@@ -34,6 +37,7 @@ export function prismaQueryJoin<T>(queries: PrismaArgs[], operators: PrismaOpera
                             AND: [prismaArgs[operator], query[operator]],
                         }
                     } else {
+                        console.log(`${operator}: ${query[operator]}`)
                         prismaArgs[operator] = query[operator]
                     }
                 } else if (prismaArgs?.[operator]) {
@@ -44,6 +48,8 @@ export function prismaQueryJoin<T>(queries: PrismaArgs[], operators: PrismaOpera
             }
         })
     })
+
+    console.log({ prismaArgs: JSON.stringify(prismaArgs) })
 
     return prismaArgs as T
 }
@@ -112,7 +118,17 @@ export async function getQuery(prismaClient: PrismaClient, query: QueryParams) {
 export async function listQuery(prismaClient: PrismaClient, query: QueryParams) {
     if (query.context.model === null) return
 
-    const results = await prismaClient[query.context.model].findMany(queryBuilder.prismaList(query.prismaArgs))
+    console.log('list query', query.context.model, JSON.stringify(queryBuilder.prismaList(query.prismaArgs)))
+
+    let results = []
+
+    try {
+        results = await prismaClient[query.context.model].findMany(queryBuilder.prismaList(query.prismaArgs))
+    } catch (e) {
+        console.log(e)
+    }
+
+    console.log('results', results)
 
     return results
 }

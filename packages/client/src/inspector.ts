@@ -89,12 +89,12 @@ export function debug(...data): void {
 export function log(data: any, level?: 'ERROR' | 'WARN' | 'INFO'): void {
     const logLevel = typeof level !== 'undefined' ? level : 'INFO'
     const logPrefix = `◭ Prisma-AppSync :: <<${logLevel}>>`
+
     const dataList = Array.isArray(data) ? data : []
 
     dataList.forEach((logData: any, index: number) => {
         let log = typeof logData === 'string' ? logData : inspect(logData)
         if (index === 0) log = `${logPrefix} ${log}`
-
         if (level === 'ERROR') console.error(log)
         else if (level === 'WARN') console.warn(log)
         else console.info(log)

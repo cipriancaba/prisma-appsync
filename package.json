@@ -34,7 +34,8 @@
         "appsync-crud-api"
     ],
     "devDependencies": {
-        "@prisma/client": "^3.9.2",
+        "@prisma/client": "4.5.0",
+        "pm2": "^5.2.0",
         "@types/dot-object": "^2.1.2",
         "@types/fs-extra": "^9.0.13",
         "@types/lodash": "^4.14.178",
@@ -63,7 +64,7 @@
         "nunjucks": "^3.2.3",
         "pluralize": "^8.0.0",
         "prettier": "^2.5.1",
-        "prisma": "^3.9.2",
+        "prisma": "4.5.0",
         "prompts": "^2.4.2",
         "scule": "^0.2.1",
         "ts-node": "^10.7.0",

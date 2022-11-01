@@ -294,7 +294,11 @@ export class PrismaAppSync {
             }
             // Resolver :: resolve query with built-in CRUD
             else if (!isEmpty(QueryParams?.context?.model)) {
-                debug(`Resolving query for built-in CRUD operation "${QueryParams.operation}".`)
+                debug(
+                    `Resolving query for built-in CRUD operation "${QueryParams.operation}" with ${JSON.stringify(
+                        QueryParams,
+                    )}.`,
+                )
                 result = await queries[`${QueryParams.context.action}Query`](this.prismaClient, QueryParams)
             }
             // Resolver :: query resolver not found
