@@ -241,6 +241,7 @@ export class PrismaAppSync {
 
             // Guard: get and run all before hooks functions matching query
             if (resolveParams?.hooks) {
+                console.log("we have hooks", resolveParams?.hooks, JSON.stringify(QueryParams))
                 QueryParams = await runHooks({
                     when: 'before',
                     hooks: resolveParams.hooks,
@@ -248,6 +249,8 @@ export class PrismaAppSync {
                     QueryParams,
                 })
             }
+
+            console.log({QueryParams})
 
             // Resolver :: resolve query for UNIT TESTS
             if (process?.env?.PRISMA_APPSYNC_TESTING === 'true') {
@@ -291,6 +294,7 @@ export class PrismaAppSync {
                     ...QueryParams,
                     prismaClient: this.prismaClient,
                 })
+                console.log("customer resolver result", result)
             }
             // Resolver :: resolve query with built-in CRUD
             else if (!isEmpty(QueryParams?.context?.model)) {
@@ -310,14 +314,13 @@ export class PrismaAppSync {
 
             // Guard: get and run all after hooks functions matching query
             if (resolveParams?.hooks) {
-                const q: AfterHookParams = await runHooks({
+                result = await runHooks({
                     when: 'after',
                     hooks: resolveParams.hooks,
                     prismaClient: this.prismaClient,
                     QueryParams,
                     result,
                 })
-                result = q.result
             }
         } catch (error) {
             // Return error

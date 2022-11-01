@@ -203,6 +203,12 @@ export async function runHooks({
     QueryParams: QueryParams
     result?: any | any[]
 }): Promise<void | any> {
+    console.log({
+        when,
+        hooks,
+        QueryParams,
+        result,
+    })
     const matchingHooks = Object.keys(hooks).filter((hookPath: string) => {
         const hookParts = hookPath.split(':')
         const hookWhen = hookParts[0]
@@ -211,6 +217,8 @@ export async function runHooks({
 
         return hookWhen === when && isMatchingGlob(currentPath, hookGlob)
     })
+
+    console.log("Matching hooks", matchingHooks.length)
 
     if (matchingHooks.length > 0) {
         for (let index = 0; index < matchingHooks.length; index++) {
@@ -227,7 +235,7 @@ export async function runHooks({
         }
     }
 
-    return result
+    return result || QueryParams
 }
 
 export async function preventDOS({
