@@ -397,7 +397,8 @@ export function getPrismaArgs({
         prismaArgs.skipDuplicates = _arguments.skipDuplicates
 
     if (typeof _selectionSetList !== 'undefined')
-        prismaArgs.select = parseSelectionList(_selectionSetList)
+        prismaArgs.select = 
+            (_selectionSetList)
 
     if (isEmpty(prismaArgs.select))
         delete prismaArgs.select
@@ -488,7 +489,7 @@ function getSelect(parts: any): any {
  * @returns any
  */
 function parseSelectionList(selectionSetList: any): any {
-    let prismaArgs: any = {}
+    let prismaArgs: any = { select: {} }
 
     for (let i = 0; i < selectionSetList.length; i++) {
         const path = selectionSetList[i]
